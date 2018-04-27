@@ -42,17 +42,6 @@ export const constantRouterMap = [
       name: 'dashboard',
       meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
     }]
-  },
-  {
-    path: '/documentation',
-    component: Layout,
-    redirect: '/documentation/index',
-    children: [{
-      path: 'index',
-      component: _import('documentation/index'),
-      name: 'documentation',
-      meta: { title: 'documentation', icon: 'documentation', noCache: true }
-    }]
   }
 ]
 
@@ -64,6 +53,20 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
+    path: '/package',
+    component: Layout,
+    redirct: 'noredirect',
+    meta: {
+      title: 'packagemanager',
+      icon: 'zip',
+      roles: ['admin']
+    },
+    children: [
+      { path: 'package-list', component: _import('package/package-list'), name: 'package-list', meta: { title: 'packagelist' }},
+      { path: 'package-upload', component: _import('package/package-upload'), name: 'package-upload', meta: { title: 'packageupload' }}
+    ]
+  }
+/* {
     path: '/permission',
     component: Layout,
     redirect: '/permission/index',
@@ -246,5 +249,5 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
 
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true }*/
 ]

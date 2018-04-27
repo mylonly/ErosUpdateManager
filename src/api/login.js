@@ -6,7 +6,7 @@ export function loginByUsername(username, password) {
     password
   }
   return request({
-    url: '/login/login',
+    url: '/auth/login',
     method: 'post',
     data
   })
@@ -14,16 +14,15 @@ export function loginByUsername(username, password) {
 
 export function logout() {
   return request({
-    url: '/login/logout',
+    url: '/auth/logout',
     method: 'post'
   })
 }
 
-export function getUserInfo(token) {
+export function getUserInfo() {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+    url: '/auth/profile',
+    method: 'get'
   })
 }
 

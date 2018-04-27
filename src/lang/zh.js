@@ -1,6 +1,9 @@
 export default {
   route: {
     dashboard: '首页',
+    packagemanager: '更新包管理',
+    packagelist: '更新包列表',
+    packageupload: '更新包上传',
     introduction: '简述',
     documentation: '文档',
     permission: '权限测试页',

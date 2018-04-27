@@ -1,6 +1,9 @@
 export default {
   route: {
     dashboard: 'Dashboard',
+    packagemanager: 'Package Manager',
+    packagelist: 'Package List',
+    packageupload: 'Package Upload',
     introduction: 'Introduction',
     documentation: 'Documentation',
     permission: 'Permission',

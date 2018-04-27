@@ -100,6 +100,7 @@ export default {
             this.loading = false
             this.$router.push({ path: '/' })
           }).catch(() => {
+            console.log('error')
             this.loading = false
           })
         } else {

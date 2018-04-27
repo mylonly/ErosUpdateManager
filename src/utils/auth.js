@@ -1,9 +1,10 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'Admin-Token'
+const TokenKey = 'csrftoken'
 
 export function getToken() {
-  return Cookies.get(TokenKey)
+  var token = Cookies.get(TokenKey)
+  return token
 }
 
 export function setToken(token) {
