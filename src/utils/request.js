@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-/* import store from '@/store'
-import { getToken } from '@/utils/auth'*/
+// import { getToken } from '@/utils/auth'
 
 // create an axios instance
 
@@ -16,10 +15,10 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(config => {
   // Do something before request is sent
-  /* if (store.getters.token) {
-    config.headers['X-CSRFToken'] = getToken() // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-  }
-  console.log('config:', config)*/
+  //  if (store.getters.token) {
+  // config.headers['X-CSRFToken'] = getToken() // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
+  // }
+  // console.log('config:', config)
   return config
 }, error => {
   // Do something with request error
@@ -31,9 +30,9 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
     const responseData = response.data
-    if (responseData.status !== 0) {
+    if (responseData.resCode !== 0) {
       Message({
-        message: responseData.message,
+        message: responseData.msg,
         type: 'error',
         duration: 5 * 1000
       })
@@ -45,7 +44,7 @@ service.interceptors.response.use(
   error => {
     console.log('err' + error)// for debug
     Message({
-      message: error.message,
+      message: error.msg,
       type: 'error',
       duration: 5 * 1000
     })

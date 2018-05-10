@@ -134,5 +134,20 @@ export default {
     close: '关闭',
     closeOthers: '关闭其它',
     closeAll: '关闭所有'
+  },
+  package: {
+    id: 'ID',
+    appName: '所属应用',
+    jsVersion: '版本号',
+    android: 'Android版本',
+    ios: 'iOS版本',
+    date: '创建时间',
+    timestamp: '时间戳',
+    jsPath: '下载地址',
+    isForceUpdate: '是否强制更新',
+    changelog: '改动日志',
+    published: '是否发布',
+    edit: '编辑',
+    detail: '详情'
   }
 }
