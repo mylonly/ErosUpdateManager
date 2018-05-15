@@ -28,9 +28,14 @@ package list
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-       <el-table-column align="center" :label="$t('package.jsVersion')" width="150">
+      <el-table-column align="center" :label="$t('package.jsVersion')" width="150">
         <template slot-scope="scope">
           <span>{{scope.row.jsVersion}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" :label="$t('package.jsMD5')" width="150">
+        <template slot-scope="scope">
+          <span>{{scope.row.jsMD5}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" :label="$t('package.appName')" width="200">
@@ -58,9 +63,9 @@ package list
           <span>{{scope.row.jsPath}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" :label="$t('package.isForceUpdate')">
+      <el-table-column width="150px" align="center" :label="$t('package.showUpdateAlert')">
         <template slot-scope="scope">
-          <span>{{scope.row.isForceUpdate ? "是":"否"}}</span>
+          <span>{{scope.row.showUpdateAlert ? "是":"否"}}</span>
         </template>
       </el-table-column>
       <el-table-column width="150px" align="center" :label="$t('package.changelog')">
@@ -93,11 +98,14 @@ package list
         <el-form-item :label="$t('package.appName')" prop="appName">
           <el-input v-model="temp.appName" :disabled="true"></el-input>
         </el-form-item>
+        <el-form-item :label="$t('package.jsMD5')" prop="jsMD5">
+          <el-input v-model="temp.jsMD5" :disabled="true"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('package.published')">
           <el-switch v-model="temp.published" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
         </el-form-item>
-        <el-form-item :label="$t('package.isForceUpdate')">
-          <el-switch v-model="temp.isForceUpdate" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
+        <el-form-item :label="$t('package.showUpdateAlert')">
+          <el-switch v-model="temp.showUpdateAlert" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
         </el-form-item>
         <el-form-item :label="$t('package.changelog')">
           <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="Please input" v-model="temp.changelog">
@@ -143,13 +151,14 @@ export default {
       temp: {
         id: undefined,
         jsVersion: undefined,
+        jsMD5: undefined,
         android: undefined,
         ios: undefined,
         timestamp: undefined,
         appName: '',
         published: false,
         jsPath: undefined,
-        isForceUpdate: false,
+        showUpdateAlert: false,
         changelog: ''
       },
       dialogFormVisible: false,
@@ -224,12 +233,7 @@ export default {
       }
     },
     handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+      this.$router.push('/package/package-upload')
     },
     createData() {
       this.$refs['dataForm'].validate((valid) => {

@@ -67,6 +67,21 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/release',
+    component: Layout,
+    redirct: 'noredirect',
+    meta: {
+      title: 'release',
+      icon: 'international',
+      roles: ['admin']
+    },
+    children: [
+      { path: 'list', component: _import('release/list'), name: 'list', meta: { title: 'releaselist' }},
+      { path: 'add', component: _import('release/add'), name: 'add', meta: { title: 'addrelease' }},
+      { path: 'record', component: _import('release/record'), name: 'record', meta: { title: 'recordlist' }}
+    ]
+  },
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/index',

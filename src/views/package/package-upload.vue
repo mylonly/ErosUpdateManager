@@ -27,6 +27,9 @@ package upload
         <el-form-item :label="$t('package.jsVersion')" prop="jsVersion">
           <el-input v-model="package.jsVersion" placeholder="请输入更新包版本号"></el-input>
         </el-form-item>
+        <el-form-item :label="$t('package.jsMD5')" prop="jsMD5">
+          <el-input v-model="package.jsMD5" placeholder="请输入更新包版本号" :disabled="true"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('package.appName')" prop="appName">
           <el-input v-model="package.appName" :disabled="true"></el-input>
         </el-form-item>
@@ -43,10 +46,10 @@ package upload
           <el-input v-model="package.jsPath" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item :label="$t('package.published')" prop="published">
-          <el-switch v-model="package.published" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+          <el-switch v-model="package.published" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
         </el-form-item>
-        <el-form-item :label="$t('package.isForceUpdate')">
-          <el-switch v-model="package.isForceUpdate" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
+        <el-form-item :label="$t('package.showUpdateAlert')">
+          <el-switch v-model="package.showUpdateAlert" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
         </el-form-item>
         <el-form-item :label="$t('package.changelog')">
           <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入更新包改动日志" v-model="package.changelog">
@@ -54,10 +57,10 @@ package upload
         </el-form-item>
       </el-form>
 
-      <div class="footer">
+      <el-row type="flex" justify="end">
           <el-button @click="upload_success = false">{{$t('table.cancel')}}</el-button>
           <el-button type="primary" @click="createPackage" v-loading.fullscreen.lock="creating">{{$t('table.confirm')}}</el-button>
-      </div>
+      </el-row>
     </div>
 
    
@@ -78,6 +81,7 @@ package upload
         package: {
           appName: undefined,
           jsVersion: undefined,
+          jsMD5: undefined,
           android: undefined,
           ios: undefined,
           timestamp: undefined,
