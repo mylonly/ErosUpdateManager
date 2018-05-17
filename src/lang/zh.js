@@ -171,6 +171,8 @@ export default {
     grayscale: '灰度值',
     deviceIDs: '设备列表',
     date: '修改时间',
-    progress: '更新进度'
+    progress: '更新进度',
+    iOS: 'iOS',
+    android: 'Android'
   }
 }

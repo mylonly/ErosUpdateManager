@@ -30,3 +30,11 @@ export function createPackage(data) {
     data
   })
 }
+
+export function packageVersion(query) {
+  return request({
+    url: '/package/version',
+    method: 'get',
+    params: query
+  })
+}

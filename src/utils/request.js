@@ -37,9 +37,8 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
       return Promise.reject(responseData)
-    } else {
-      return responseData
     }
+    return responseData
   },
   error => {
     console.log('err' + error)// for debug

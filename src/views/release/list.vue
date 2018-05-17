@@ -42,6 +42,16 @@ package list
           <span>{{scope.row.jsVersion}}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" :label="$t('release.iOS')" width="150">
+        <template slot-scope="scope">
+          <span>{{scope.row.iOS}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" :label="$t('release.android')" width="150">
+        <template slot-scope="scope">
+          <span>{{scope.row.android}}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" :label="$t('release.releaseType')" width="150">
         <template slot-scope="scope">
           <span>{{scope.row.releaseType ? '指定设备' : '灰度值'}}</span>
@@ -166,7 +176,7 @@ export default {
       this.getList()
     },
     handleCreate() {
-      this.$router.push('/package/package-upload')
+      this.$router.push('/release/add')
     },
     handleProgress(release) {
       return 25

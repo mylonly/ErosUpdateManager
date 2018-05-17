@@ -63,21 +63,6 @@ package list
           <span>{{scope.row.jsPath}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" :label="$t('package.showUpdateAlert')">
-        <template slot-scope="scope">
-          <span>{{scope.row.showUpdateAlert ? "是":"否"}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="150px" align="center" :label="$t('package.changelog')">
-        <template slot-scope="scope">
-          <span>{{scope.row.changelog}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="150px" align="center" :label="$t('package.published')">
-        <template slot-scope="scope">
-          <span>{{scope.row.published ? "是":"否"}}</span>
-        </template>
-      </el-table-column>
       <el-table-column fixed="right" align="center" :label="$t('table.actions')" width="150" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{$t('package.edit')}}</el-button>

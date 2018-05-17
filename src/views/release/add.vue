@@ -19,12 +19,12 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('release.jsVersion')" prop="jsVersion">
-          <el-select v-model="release.jsVersion" placeholder="请选择更新包">
+          <el-select v-model="release.jsVersion" placeholder="请选择更新包" @change="package_change">
             <el-option
               v-for="item in packagelist"
-              :key="item.jsVersion"
+              :key="item"
               :label="item.jsVersion"
-              :value="item.jsVersion">
+              :value="item">
             </el-option>
           </el-select>
         </el-form-item>
@@ -39,8 +39,8 @@
         </el-form-item>
         <el-form-item :label="$t('release.deviceIDs')" prop="deviceIDs" v-if="release.filterType == 1">
           <el-tag
-            :key="tag"
             v-for="tag in release.deviceIDs"
+            :key="tag"
             closable
             :disable-transitions="false"
             @close="handleClose(tag)">
@@ -81,6 +81,8 @@
           jsVersion: undefined,
           filterType: 0,
           grayScale: 1,
+          iOS: undefined,
+          android: undefined,
           deviceIDs: []
         },
         inputVisible: false,
@@ -126,6 +128,12 @@
         this.inputVisible = false
         this.inputValue = ''
       },
+      package_change(item) {
+        console.log('item:', item)
+        this.release.jsVersion = item.jsVersion
+        this.release.iOS = item.ios
+        this.release.android = item.android
+      },
       createRelease() {
         this.creating = true
         this.release.deviceIDs = this.release.deviceIDs.join(',')
@@ -137,10 +145,10 @@
             message: '创建成功',
             type: 'success',
             duration: 2000
-          }).catch(error => {
-            this.creating = false
-            console.log('erros', error)
           })
+        }).catch(error => {
+          this.creating = false
+          console.log('erros', error)
         })
       }
     }
