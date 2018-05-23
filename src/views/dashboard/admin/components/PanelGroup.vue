@@ -6,41 +6,41 @@
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">New Visits</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="102400" :duration="2600"></count-to>
+          <div class="card-panel-text">今日活跃</div>
+          <count-to class="card-panel-num" :startVal="0" :endVal="todayActive" :duration="2600"></count-to>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
+          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Messages</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to>
+          <div class="card-panel-text">iOS设备数</div>
+          <count-to class="card-panel-num" :startVal="0" :endVal="iOSTotal" :duration="3000"></count-to>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
+          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Purchases</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="9280" :duration="3200"></count-to>
+          <div class="card-panel-text">Android设备数</div>
+          <count-to class="card-panel-num" :startVal="0" :endVal="AndroidTotal" :duration="3200"></count-to>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('shoppings')">
         <div class="card-panel-icon-wrapper icon-shoppingCard">
-          <svg-icon icon-class="shoppingCard" class-name="card-panel-icon" />
+          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Shoppings</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="13600" :duration="3600"></count-to>
+          <div class="card-panel-text">总设备数</div>
+          <count-to class="card-panel-num" :startVal="0" :endVal="Total" :duration="3600"></count-to>
         </div>
       </div>
     </el-col>
@@ -49,14 +49,68 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { recordList } from '@/api/release'
+import { parseTime } from '@/utils'
 
 export default {
+  props: {
+    appName: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      todayActive: 0,
+      iOSTotal: 0,
+      AndroidTotal: 0,
+      Total: 0
+    }
+  },
   components: {
     CountTo
+  },
+  watch: {
+    appName(value) {
+      this.handleQuery(value)
+    }
+  },
+  created() {
   },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    handleQuery(appName) {
+      const totalQuery = {
+        'appName': appName
+      }
+      recordList(totalQuery).then(resData => {
+        this.Total = resData.data.count
+      })
+      const iOSQuery = {
+        'appName': appName,
+        'appPlatform': 'iOS'
+      }
+      recordList(iOSQuery).then(resData => {
+        this.iOSTotal = resData.data.count
+      })
+      const AndroidQuery = {
+        'appName': appName,
+        'appPlatform': 'Android'
+      }
+      recordList(AndroidQuery).then(resData => {
+        this.AndroidTotal = resData.data.count
+      })
+      var timestamp = new Date()
+
+      const ActiveQuery = {
+        'appName': appName,
+        'updateTime__date__gte': parseTime(timestamp, '{y}-{m}-{d}')
+      }
+      recordList(ActiveQuery).then(resData => {
+        this.todayActive = resData.data.count
+      })
     }
   }
 }

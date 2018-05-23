@@ -153,7 +153,8 @@ export default {
     changelog: '改动日志',
     published: '是否发布',
     edit: '编辑',
-    detail: '详情'
+    detail: '详情',
+    delete: '删除'
   },
   release: {
     id: 'ID',
@@ -173,6 +174,11 @@ export default {
     date: '修改时间',
     progress: '更新进度',
     iOS: 'iOS',
-    android: 'Android'
+    android: 'Android',
+    showUpdateAlert: '显示更新提示',
+    changelog: '改动日志',
+    isForceUpdate: '是否强制更新',
+    backoff: '回滚',
+    delete: '删除'
   }
 }

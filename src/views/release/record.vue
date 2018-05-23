@@ -47,11 +47,6 @@
           <span>{{scope.row.appVersion}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" :label="$t('release.isDiff')" width="200">
-        <template slot-scope="scope">
-          <span>{{scope.row.isDiff}}</span>
-        </template>
-      </el-table-column>
       <el-table-column align="center" :label="$t('release.deviceToken')" width="200">
         <template slot-scope="scope">
           <span>{{scope.row.deviceToken}}</span>
@@ -64,12 +59,12 @@
       </el-table-column>
       <el-table-column width="150px" align="center" :label="$t('release.osVersion')">
         <template slot-scope="scope">
-          <span>{{scope.row.changelog}}</span>
+          <span>{{scope.row.osVersion}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" :label="$t('release.updateJSVersion')">
+      <el-table-column width="150px" align="center" :label="$t('release.date')">
         <template slot-scope="scope">
-          <span>{{scope.row.updateJSVersion}}</span>
+          <span>{{scope.row.updateTime}}</span>
         </template>
       </el-table-column>
     </el-table>

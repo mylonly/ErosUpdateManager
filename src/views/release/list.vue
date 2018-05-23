@@ -62,14 +62,25 @@ package list
           <span>{{scope.row.createtime}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" :label="$t('release.progress')">
+      <el-table-column width="150px" align="center" :label="$t('release.showUpdateAlert')">
         <template slot-scope="scope">
-          <el-progress type="circle" :percentage="handleProgress(scope.row)"></el-progress>
+          <span>{{scope.row.showUpdateAlert ? '是' : '否'}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" :label="$t('table.actions')" width="150" class-name="small-padding fixed-width">
+      <el-table-column width="150px" align="center" :label="$t('release.isForceUpdate')">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini">{{$t('package.edit')}}</el-button>
+          <span>{{scope.row.isForceUpdate ? '是' : '否'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="150px" align="center" :label="$t('release.changelog')">
+        <template slot-scope="scope">
+          <span>{{scope.row.changelog}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column  fixed="right" align="center" :label="$t('table.actions')" width="150" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini"  @click="handleUpdate(scope.row)">{{$t('package.edit')}}</el-button>
+          <el-button type="danger" size="mini"  @click="handleDelete(scope.row)">{{$t('release.delete')}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,11 +89,67 @@ package list
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="100px" style='width: 400px; margin-left:50px;'>
+        <el-form-item :label="$t('release.appName')" prop="appName">
+          <el-input v-model="temp.appName" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('release.jsVersion')" prop="jsVersion">
+          <el-input v-model="temp.jsVersion" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('release.releaseType')">
+          <el-radio-group v-model="temp.filterType" type="number">
+            <el-radio :label="0" border >灰度值</el-radio>
+            <el-radio :label="1" border >指定设备</el-radio>
+          </el-radio-group>        
+        </el-form-item>
+        <el-form-item :label="$t('release.grayscale')" prop="grayscale" v-if="temp.filterType == 0">
+          <el-slider v-model="temp.grayScale" show-input :max="1" :step="0.01"></el-slider>
+        </el-form-item>
+        <el-form-item :label="$t('release.deviceIDs')" prop="deviceIDs" v-if="temp.filterType == 1">
+          <el-tag
+            v-for="tag in temp.deviceIDs"
+            :key="tag"
+            closable
+            :disable-transitions="false"
+            @close="handleClose(tag)">
+            {{tag}}
+          </el-tag>
+          <el-input
+            class="input-new-tag"
+            v-if="inputVisible"
+            v-model="inputValue"
+            ref="saveTagInput"
+            size="small"
+            @keyup.enter.native="handleInputConfirm"
+            @blur="handleInputConfirm"
+          >
+          </el-input>
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+        </el-form-item>
+        <el-form-item :label="$t('release.showUpdateAlert')">
+          <el-switch v-model="temp.showUpdateAlert" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
+        </el-form-item>
+        <el-form-item :label="$t('release.isForceUpdate')">
+          <el-switch v-model="temp.isForceUpdate" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
+        </el-form-item>
+        <el-form-item :label="$t('release.changelog')">
+          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="Please input" v-model="temp.changelog">
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
+        <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { releaselist } from '@/api/release'
+import { releaselist, updateRelease, deleteRelease } from '@/api/release'
 import waves from '@/directive/waves' // 水波纹指令
 
 export default {
@@ -113,11 +180,12 @@ export default {
         jsMD5: undefined,
         android: undefined,
         ios: undefined,
-        timestamp: undefined,
         appName: '',
-        published: false,
-        jsPath: undefined,
+        filterType: 0,
+        deviceIDs: undefined,
+        grayScale: undefined,
         showUpdateAlert: false,
+        isForceUpdate: false,
         changelog: ''
       },
       dialogFormVisible: false,
@@ -133,7 +201,10 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      inputVisible: false,
+      inputValue: '',
+      creating: false
     }
   },
   filters: {
@@ -175,11 +246,76 @@ export default {
       this.listQuery.offset = (val - 1) * this.listQuery.limit
       this.getList()
     },
+    handleClose(tag) {
+      this.temp.deviceIDs.splice(this.temp.deviceIDs.indexOf(tag), 1)
+    },
+    showInput() {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    handleInputConfirm() {
+      const inputValue = this.inputValue
+      if (inputValue) {
+        this.temp.deviceIDs.push(inputValue)
+      }
+      this.inputVisible = false
+      this.inputValue = ''
+    },
+    handleUpdate(row) {
+      this.temp = Object.assign({}, row) // copy obj
+      this.temp.deviceIDs = this.temp.deviceIDs.split(',')
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    handleDelete(row) {
+      this.$confirm('此操作将会导致APP回到上一个版本', '确定回滚发布?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteRelease(row).then(resData => {
+          this.$message({
+            type: 'success',
+            message: '回滚成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '回滚失败!'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    updateData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          const tempData = Object.assign({}, this.temp)
+          tempData.deviceIDs = tempData.deviceIDs.join(',')
+          console.log('tempData:', tempData)
+          updateRelease(tempData).then(response => {
+            this.dialogFormVisible = false
+            this.$notify({
+              title: '成功',
+              message: '编辑成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
     handleCreate() {
       this.$router.push('/release/add')
-    },
-    handleProgress(release) {
-      return 25
     }
   }
 }

@@ -23,3 +23,27 @@ export function releaselist(query) {
     params: query
   })
 }
+
+export function updateRelease(data) {
+  return request({
+    url: '/release/update',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteRelease(data) {
+  return request({
+    url: '/release/delete',
+    method: 'post',
+    data
+  })
+}
+
+export function queryProgress(data) {
+  return request({
+    url: '/release/progress',
+    method: 'post',
+    data
+  })
+}

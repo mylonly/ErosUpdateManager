@@ -1,17 +1,27 @@
 <template>
   <div class="dashboard-editor-container">
-    <github-corner></github-corner>
-
-    <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData"></line-chart>
+    
+    <el-row>
+      <el-col :span="4" :offset="20">
+        <el-select v-model="appName" :placeholder="appName ? appName : '请选择APP' " @change="appchange">
+          <el-option
+            v-for="item in applist"
+            :key="item.appName"
+            :label="item.name"
+            :value="item.appName">
+            <span style="float: left">{{ item.name }}</span>
+          </el-option>
+        </el-select>
+      </el-col>
     </el-row>
+
+    <panel-group :appName="appName" @handleSetLineChartData="handleSetLineChartData"></panel-group>
+
 
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart></raddar-chart>
+          <pie-chart></pie-chart>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -37,12 +47,10 @@
         <box-card></box-card>
       </el-col>
     </el-row>
-
   </div>
 </template>
 
 <script>
-import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
@@ -51,6 +59,7 @@ import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
+import { applist } from '@/api/app'
 
 const lineChartData = {
   newVisitis: {
@@ -74,7 +83,6 @@ const lineChartData = {
 export default {
   name: 'dashboard-admin',
   components: {
-    GithubCorner,
     PanelGroup,
     LineChart,
     RaddarChart,
@@ -86,12 +94,25 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      applist: [],
+      appName: undefined
     }
+  },
+  created() {
+    applist().then(resData => {
+      this.applist = resData.data.results
+      if (this.applist.length > 0) {
+        this.appName = this.applist[0].appName
+      }
+    })
   },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
+    },
+    appchange(app) {
+      this.appName = app
     }
   }
 }

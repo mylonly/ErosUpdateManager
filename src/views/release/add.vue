@@ -58,6 +58,16 @@
           </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
         </el-form-item>
+        <el-form-item :label="$t('release.showUpdateAlert')">
+          <el-switch v-model="release.showUpdateAlert" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
+        </el-form-item>
+        <el-form-item :label="$t('release.isForceUpdate')">
+          <el-switch v-model="release.isForceUpdate" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
+        </el-form-item>
+        <el-form-item :label="$t('release.changelog')">
+          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="Please input" v-model="release.changelog">
+          </el-input>
+        </el-form-item>
       </el-form>
 
       <el-row type="flex" justify="end">
@@ -83,7 +93,10 @@
           grayScale: 1,
           iOS: undefined,
           android: undefined,
-          deviceIDs: []
+          deviceIDs: [],
+          showUpdateAlert: false,
+          isForceUpdate: true,
+          changelog: undefined
         },
         inputVisible: false,
         inputValue: '',
@@ -96,7 +109,7 @@
     methods: {
       getApplist() {
         applist().then(resData => {
-          this.applist = resData.data
+          this.applist = resData.data.results
         })
       },
       getPackagelist(appName) {
@@ -112,7 +125,7 @@
         this.getPackagelist(appName)
       },
       handleClose(tag) {
-        this.deviceIDs.splice(this.dynamicTags.indexOf(tag), 1)
+        this.release.deviceIDs.splice(this.release.deviceIDs.indexOf(tag), 1)
       },
       showInput() {
         this.inputVisible = true
