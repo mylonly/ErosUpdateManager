@@ -6,7 +6,7 @@ package upload
 -->
 <template>
   <div class="app-container calendar-list-container">
-    <el-upload class="upload-demo" drag action="http://127.0.0.1:8000/package/upload" multiple
+    <el-upload class="upload-demo" drag action="http://weex.1234tv.com/package/upload" multiple
       :on-progress= "on_progress" :on-success= "on_success" :on-error= "on_error"
       :before-upload= "before_upload"
       v-if="!upload_success"
