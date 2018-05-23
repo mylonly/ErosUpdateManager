@@ -6,7 +6,7 @@ package upload
 -->
 <template>
   <div class="app-container calendar-list-container">
-    <el-upload class="upload-demo" drag action="http://localhost:8000/package/upload" :with-credentials="true" :headers="postHeader"
+    <el-upload class="upload-demo" drag action="/package/upload" :with-credentials="true" :headers="postHeader"
       :on-progress= "on_progress" :on-success= "on_success" :on-error= "on_error"
       :before-upload= "before_upload"
       v-if="!upload_success"
