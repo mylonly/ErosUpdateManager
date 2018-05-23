@@ -6,7 +6,7 @@ package upload
 -->
 <template>
   <div class="app-container calendar-list-container">
-    <el-upload class="upload-demo" drag action="/package/upload" with-credentials="true"
+    <el-upload class="upload-demo" drag action="http://localhost:8000/package/upload" :with-credentials="true" :headers="postHeader"
       :on-progress= "on_progress" :on-success= "on_success" :on-error= "on_error"
       :before-upload= "before_upload"
       v-if="!upload_success"
@@ -72,6 +72,7 @@ package upload
 <script>
   import { parseTime } from '@/utils'
   import { createPackage } from '@/api/package'
+  import { getToken } from '@/utils/auth'
 
   export default {
     data() {
@@ -93,6 +94,17 @@ package upload
         upload_success: false,
         loading: false,
         creating: false
+      }
+    },
+    created() {
+
+    },
+    computed: {
+      postHeader() {
+        var csrf = getToken()
+        return {
+          'X-CSRFTOKEN': csrf
+        }
       }
     },
     methods: {
