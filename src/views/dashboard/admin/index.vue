@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard-editor-container">
     
-    <el-row>
-      <el-col :span="4" :offset="20">
-        <el-select v-model="appName" :placeholder="appName ? appName : '请选择APP' " @change="appchange">
+    <el-row type="flex" justify="end">
+      <el-col :span="3">
+        <el-select v-model="appName" :placeholder="appName ? appName : '请选择APP' " @change="appchange" style="width:100%;">
           <el-option
             v-for="item in applist"
             :key="item.appName"

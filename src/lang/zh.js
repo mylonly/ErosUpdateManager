@@ -61,7 +61,8 @@ export default {
     dashboard: '首页',
     github: '项目地址',
     screenfull: '全屏',
-    theme: '换肤'
+    theme: '换肤',
+    profile: '个人信息'
   },
   login: {
     title: '系统登录',

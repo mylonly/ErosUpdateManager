@@ -63,7 +63,7 @@ package list
           <span>{{scope.row.jsPath}}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" :label="$t('table.actions')" width="150" class-name="small-padding fixed-width">
+      <el-table-column  align="center" :label="$t('table.actions')" width="150" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">{{$t('package.delete')}}</el-button>
         </template>
