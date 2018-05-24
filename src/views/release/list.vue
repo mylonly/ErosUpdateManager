@@ -54,7 +54,7 @@ package list
       </el-table-column>
       <el-table-column align="center" :label="$t('release.releaseType')" width="150">
         <template slot-scope="scope">
-          <span>{{scope.row.releaseType ? '指定设备' : '灰度值'}}</span>
+          <span>{{scope.row.filterType ? '指定设备' : '灰度值'}}</span>
         </template>
       </el-table-column> 
       <el-table-column width="150px" align="center" :label="$t('release.date')">
@@ -314,6 +314,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
           })
         }
       })
