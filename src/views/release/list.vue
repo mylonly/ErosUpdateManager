@@ -265,7 +265,11 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.deviceIDs = this.temp.deviceIDs.split(',')
+      if (this.temp.deviceIDs.length > 0) {
+        this.temp.deviceIDs = this.temp.deviceIDs.split(',')
+      } else {
+        this.temp.deviceIDs = []
+      }
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
