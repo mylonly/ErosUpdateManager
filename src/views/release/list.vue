@@ -273,20 +273,24 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将会导致APP回到上一个版本', '确定回滚发布?', {
+      this.$confirm('此操作将会导致APP收到上一个版本的更新通知', '确定删除发布?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         deleteRelease(row).then(resData => {
-          this.$message({
+          this.$notify({
+            title: '成功',
             type: 'success',
-            message: '回滚成功!'
+            message: '删除成功!'
           })
+          const index = this.list.indexOf(row)
+          this.list.splice(index, 1)
         }).catch(() => {
-          this.$message({
+          this.$notify({
+            title: '失败',
             type: 'error',
-            message: '回滚失败!'
+            message: '删除失败!'
           })
         })
       }).catch(() => {

@@ -117,10 +117,11 @@
           appName: appName
         }
         fetchList(query).then(resData => {
-          this.packagelist = resData.data
+          this.packagelist = resData.data.results
         })
       },
       appChange(appName) {
+        this.release.appName = appName
         this.release.jsVersion = undefined
         this.getPackagelist(appName)
       },

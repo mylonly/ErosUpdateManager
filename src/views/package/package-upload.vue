@@ -45,16 +45,6 @@ package upload
         <el-form-item :label="$t('package.jsPath')" prop="jsPath">
           <el-input v-model="package.jsPath" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('package.published')" prop="published">
-          <el-switch v-model="package.published" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
-        </el-form-item>
-        <el-form-item :label="$t('package.showUpdateAlert')">
-          <el-switch v-model="package.showUpdateAlert" active-color="#13ce66" inactive-color="#f2f2f2"></el-switch>
-        </el-form-item>
-        <el-form-item :label="$t('package.changelog')">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入更新包改动日志" v-model="package.changelog">
-          </el-input>
-        </el-form-item>
       </el-form>
 
       <el-row type="flex" justify="end">

@@ -65,7 +65,7 @@ package list
       </el-table-column>
       <el-table-column  align="center" :label="$t('table.actions')" width="150" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">{{$t('package.delete')}}</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)" v-loading.fullscreen.lock="deleting">{{$t('package.delete')}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,7 +78,7 @@ package list
 </template>
 
 <script>
-import { fetchList, updatePackage } from '@/api/package'
+import { fetchList, updatePackage, deletePackage } from '@/api/package'
 import waves from '@/directive/waves' // 水波纹指令
 import { parseTime } from '@/utils'
 
@@ -130,7 +130,8 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      deleting: false
     }
   },
   filters: {
@@ -224,14 +225,32 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
+      this.$confirm('此操作将导致相关联的发布记录也会被删除', '确定删除这个更新包？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleting = true
+        deletePackage(row.id).then(resData => {
+          this.deleting = false
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          const index = this.list.indexOf(row)
+          this.list.splice(index, 1)
+        }).catch(() => {
+          this.$notify({
+            title: '失败',
+            message: '删除失败',
+            type: 'error',
+            duration: 2000
+          })
+          this.deleting = false
+        })
       })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
     },
     handleFetchPv(pv) {
     },

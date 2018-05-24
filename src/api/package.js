@@ -23,6 +23,17 @@ export function updatePackage(data) {
   })
 }
 
+export function deletePackage(packageID) {
+  const data = {
+    'package_id': packageID
+  }
+  return request({
+    url: '/package/delete',
+    method: 'post',
+    data
+  })
+}
+
 export function createPackage(data) {
   return request({
     url: '/package/create',

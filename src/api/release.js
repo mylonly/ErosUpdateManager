@@ -39,6 +39,16 @@ export function deleteRelease(data) {
     data
   })
 }
+export function deleteReleaseByPackage(jsMD5) {
+  const data = {
+    'jsMD5': jsMD5
+  }
+  return request({
+    url: '/release/deleteByPackage',
+    method: 'post',
+    data
+  })
+}
 
 export function queryProgress(data) {
   return request({
