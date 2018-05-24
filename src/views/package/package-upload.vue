@@ -130,7 +130,7 @@ package upload
       },
       before_upload(file) {
         console.log('file.type:', file.type)
-        const isZip = file.type === 'application/zip'
+        const isZip = file.type.indexOf('zip') !== -1
         if (!isZip) {
           this.$message.error('只能上传ZIP格式的压缩包')
           return isZip
