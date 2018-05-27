@@ -55,7 +55,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true,
       favicon: resolve('favicon.ico'),
-      title: 'vue-element-admin',
+      title: '1234TV灰度发布系统(APP)',
       path: config.dev.assetsPublicPath + config.dev.assetsSubDirectory
     }),
   ]

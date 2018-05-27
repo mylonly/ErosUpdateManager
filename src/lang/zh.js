@@ -180,6 +180,7 @@ export default {
     changelog: '改动日志',
     isForceUpdate: '是否强制更新',
     backoff: '回滚',
-    delete: '删除'
+    delete: '删除',
+    memo: '备注信息'
   }
 }

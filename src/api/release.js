@@ -8,11 +8,26 @@ export function recordList(query) {
   })
 }
 
+export function updateRecordMemo(data) {
+  return request({
+    url: '/release/recordmemo',
+    method: 'post',
+    data
+  })
+}
+
 export function addRelease(data) {
   return request({
     url: '/release/add',
     method: 'post',
     data
+  })
+}
+
+export function jsVersions() {
+  return request({
+    url: 'release/jsVersions',
+    method: 'get'
   })
 }
 

@@ -9,10 +9,8 @@
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" :placeholder="$t('release.appName')" v-model="listQuery.appName">
       </el-input>
-      <el-select clearable style="width: 120px" class="filter-item" v-model="listQuery.published" :placeholder="$t('release.published')">
-        <el-option v-for="item in [1,0]" :key="item" :label="item ? '是':'否'" :value="item">
-        </el-option>
-      </el-select>
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" :placeholder="$t('release.memo')" v-model="listQuery.memo__contains"></el-input>
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" :placeholder="$t('release.jsVersion')" v-model="listQuery.jsVersion"></el-input>
       <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.ordering">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
@@ -21,7 +19,7 @@
     </div>
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
-      style="width: 100%">
+      style="width: 100%" @cell-dblclick="memoUpdate">
       <el-table-column align="center" :label="$t('release.id')" width="65">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
@@ -67,6 +65,11 @@
           <span>{{scope.row.updateTime}}</span>
         </template>
       </el-table-column>
+      <el-table-column width="150px" align="center" :label="$t('release.memo')" >
+        <template slot-scope="scope">
+          <span>{{scope.row.memo}}</span>
+        </template>
+      </el-table-column>
     </el-table>
 
     <div class="pagination-container">
@@ -77,7 +80,7 @@
 </template>
 
 <script>
-import { recordList } from '@/api/release'
+import { recordList, updateRecordMemo, jsVersions } from '@/api/release'
 import waves from '@/directive/waves' // 水波纹指令
 
 export default {
@@ -95,9 +98,11 @@ export default {
         offset: 0,
         limit: 20,
         appName: undefined,
-        published: undefined,
+        memo__contains: undefined,
+        jsVersion: undefined,
         ordering: '-id'
       },
+      jsVersions: [],
       importanceOptions: [1, 2, 3],
       sortOptions: [{ label: 'ID Ascending', key: 'id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
@@ -112,7 +117,8 @@ export default {
         published: false,
         jsPath: undefined,
         isForceUpdate: false,
-        changelog: ''
+        changelog: '',
+        memo: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -155,6 +161,12 @@ export default {
         this.listLoading = false
       })
     },
+    getJSVersions() {
+      jsVersions().then(resData => {
+        console.log('resData:', resData)
+        this.jsVersions = resData.data
+      })
+    },
     handleFilter() {
       this.listQuery.offset = 0
       this.getList()
@@ -166,6 +178,35 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.offset = (val - 1) * this.listQuery.limit
       this.getList()
+    },
+    memoUpdate(row, column, cell, event) {
+      console.log('memo update:', row, column, cell, event)
+      if (column.label === '备注信息') {
+        this.$prompt('请备注信息', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputValue: row.memo
+        }).then(({ value }) => {
+          row.memo = value
+          updateRecordMemo(row).then(resData => {
+            this.$message({
+              type: 'success',
+              message: '修改备注成功 '
+            })
+            this.handleFilter()
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '修改备注失败'
+            })
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+      }
     }
   }
 }
