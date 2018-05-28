@@ -106,7 +106,7 @@ export default {
 
       const ActiveQuery = {
         'appName': appName,
-        'updateTime__date__gte': parseTime(timestamp, '{y}-{m}-{d}')
+        'updateTime__datetime__gte': parseTime(timestamp, '{y}-{m}-{d}')
       }
       recordList(ActiveQuery).then(resData => {
         this.todayActive = resData.data.count
